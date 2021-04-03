@@ -11,11 +11,13 @@ After cloning the repository run
  ```
  To run the executable  ```.\a.out``` :
  
- ```.\a.out in.txt ROW_ACCESS_DELAY COL_ACCESS_DELAY part_number
+ ```
+ .\a.out in.txt ROW_ACCESS_DELAY COL_ACCESS_DELAY part_number
  ```
  Here , ROW_ACCESS_DELAY,COL_ACCESS_DELAY and part_number are integer parameters that must be supplied. part_number is either 1 or 2, and the other two parameters are positive integers.
 
 ### Cleaning
-```make clean #this removes the executable ./a.out from the directory
+```
+make clean #this removes the executable ./a.out from the directory
 ```
     
