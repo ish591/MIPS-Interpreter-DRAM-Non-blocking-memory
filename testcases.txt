@@ -1,0 +1,194 @@
+All the test cases are run on both the parts so that the difference in both parts is clear:
+
+CLASS 1: Only lw instructions are present
+
+Case 1.1: Each lw is immediately followed by another lw (outputs must be same for both)
+
+ROW_ACCESS_DELAY = 4, COL_ACCESS_DELAY = 2
+
+addi $t0, $t0, 5
+addi $t1, $t1, 7
+mul $t1, $t1, $t0
+j 6
+lw $t1, 2004($s0)
+lw $t0, 2000($r0)
+lw $t2, 1996($s1)
+lw $t3, 60($r0)
+
+Case 1.2: An lw is only blocked by another lw instruction (in part 2)
+
+ROW_ACCESS_DELAY =5, COL_ACCESS_DELAY =3
+
+addi $t4,$t4, -20
+bne $t4, $r0, 4
+sub $t4, $t4, -5
+lw $t4, 4000($r0)
+sub $t2, $t2, 14
+mul $t2, $t2, 15
+lw $t2, 5000($r0)
+addi $s6, $s6, 20
+mul $s6, $s6, 3
+beq $s6, $r0, 9
+lw $s6, 5008($r0)
+
+Case 1.3: An lw is blocked only by a command containing the register involving lw (in part 2)
+
+ROW_ACCESS_DELAY = 8, COL_ACCESS_DELAY =4
+
+sub $t3, $t3, 20
+lw $t3, 6000($r0)
+addi $t4,$t4, 13
+bne $t4, $r0, 6
+addi $s6, $s6, 11
+mul $t4,$t4,$t4
+mul $t3,$t3,$t3
+lw $t4, 1800($r0)
+addi $t4, $t4, 16
+
+Case 1.4: No lw instruction is ever blocked (in part 2)
+
+ROW_ACCESS_DELAY = 1, COL_ACCESS_DELAY =1
+
+lw $t3, 2004($r0)
+addi $t4, $t4, 19
+j 5
+sub $t3, $t3, 10
+addi $t3, $t3, 18
+sub $t2, $t2, 14
+lw $t2, 5000($r0)
+mul $t3, $t3, $t3
+bne $t4, $t3, 11
+addi $t2, $t2, 20
+
+
+CLASS 2: Only sw instructions are present
+
+Case 2.1: Each sw is immediately followed by another sw (outputs must be same for both)
+
+ROW_ACCESS_DELAY = 10, COL_ACCESS_DELAY =5
+
+addi $t2, $t2, 6
+addi $t1, $t1, 12
+mul $t1, $t1, $t1
+j 5
+sw $t1, 4004($s0)
+sw $t0, 6000($r0)
+sw $t2, 2996($s1)
+sw $t3, 100($r0)
+
+
+Case 2.2: An sw is only blocked by another sw (in part 2)
+
+ROW_ACCESS_DELAY = 9, COL_ACCESS_DELAY =2
+
+sub $t3, $t3, 20
+sw $t3, 8000($r0)
+addi $t3,$t3, 19
+bne $t3, $r0, 6
+addi $s6, $s6, 11
+add $t3,$t3,$t3
+sw $s6, 800($r0)
+addi $s6, $s6, 6
+
+Case 2.3: No sw instruction is ever blocked (in part 2)
+
+ROW_ACCESS_DELAY =1, COL_ACCESS_DELAY =1
+
+addi $t4, $t4, 20
+sw $t4, 120($r0)
+addi $t4, $t4, 60
+addi $t2, $t2,12
+sw $t2, 1000($r0)
+sub $t2, $t2, $t4
+j 8
+sw $t2, 6000($r0)
+
+CLASS 3: Both lw and sw instructions are present
+
+Case 3.1: lw and sw instructions occur only consecutively
+
+ROW_ACCESS_DELAY =10, COL_ACCESS_DELAY = 8
+
+addi $t6, $t6, 10
+addi $t9, $t9, -30
+sw $t6, 1200($r0)
+lw $t7, 1200($r0)
+lw $t8, 1200($r0)
+sw $t9, 9000($r0)
+
+Case 3.2: No lw or sw instruction is ever blocked
+
+ROW_ACCESS_DELAY = 1, COL_ACCESS_DELAY =1
+
+beq $s0, $r0, 3
+j 1
+lw $s0, 3000($r0)
+addi $t3,$t3, 18
+bne $t3, $r0, 6
+sw $t3, 1600($r0)
+addi $t3, $t3, 30
+addi $t3, $t3, -20
+mul $t4, $t3,$t3
+lw $t4,60($r0)
+addi $t5,$t5,30
+
+Case 3.3: Some lw and sw instructions are blocked
+
+ROW_ACCESS_DELAY =2, COL_ACCESS_DELAY =1
+
+addi $t0,$t0, 40
+lw $t0, 1200($r0)
+addi $t1,$t1, 60
+j 7
+addi $s0, $s0, 10
+addi $t0,$t0, 10
+mul $t0,$t0, $t0
+sw $t0, 3000($r0)
+addi $t5, $t5, 10
+lw $t6, 3000($r0)
+sub $t0, $t0,$t5
+addi $s3, $s3, 30
+add $t0,$t0,$s3
+sw $s3, 1024($r0)
+sw $t0, 5600($r0)
+
+CLASS 4: Erroneous programs
+
+Case 4.1: Error while parsing (wrong syntax)
+
+ROW_ACCESS_DELAY =1, COL_ACCESS_DELAY =1
+
+addi $t0, $t0, 5
+lw $register1, 100($r0)
+
+Case 4.2: Addresses given to lw/sw not divisible by 4
+
+ROW_ACCESS_DELAY =1, COL_ACCESS_DELAY =1
+
+lw $t0, 13($r0)
+
+Case 4.3: Program enters an infinite loop
+
+ROW_ACCESS_DELAY =1, COL_ACCESS_DELAY =1
+
+addi $t0,$t0,1
+j 1
+
+Case 4.4: Addresses given to lw, sw overlap with instruction addresses
+
+ROW_ACCESS_DELAY =1, COL_ACCESS_DELAY =1
+
+addi $t0, $t0, 10
+sw $t0, 0($r0)
+
+Case 4.5: Invalid values of Row/column access delays
+
+ROW_ACCESS_DELAY = -1, COL_ACCESS_DELAY =1
+
+addi $t0, $t0, 1
+
+Case 4.6: $r0 register is tried to be changed
+
+ROW_ACCESS_DELAY = 1, COL_ACCESS_DELAY =1
+
+addi $r0, $r0, 1
